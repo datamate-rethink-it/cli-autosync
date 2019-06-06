@@ -1,83 +1,11 @@
 #!/bin/bash
 
-
-# Annahmen:
-#- speicherziel muss bereits gemountet sein (mit den richtigen Berechtigungen)
-#- seafile-user mit eingeschränkten Rechten muss angelegt sein
-#- ich nehme nur read-write Freigaben  an...
-#- seaf-cli und seafile-gui können nicht parallel installiert werden.
-#- wenn webdav, dann sollte richtig konfiguriert werden...
-
-
-# welche fälle gibt es:
-#- storage ziel ist weg > seaf-daemon stoppt
-#- bibliothek wird gelöscht oder berechtigung entfernt > desync dieser bibliothek
-#- seafile ist weg > seaf-daemon stoppt
-#- seaf-cli antwortet nicht > konnte ich nicht reproduzieren
-# wie merke ich, dass der seaf-cli zwar als process da ist, aber einen fehler zurückmeldet?
-
-# wie mounte ich hidrive: (nur ssl + webdav)
-#https://webdav.hidrive.strato.com/users/share-3452/ /mnt/hidrive davfs rw,gid=1000,uid=1000,_netdev 0 0
-
-#/etc/davfs2/secrets
-#/mnt/hidrive share-3452 e6n;uVku
-
-#/etc/davfs2/davfs2.conf
-#use_locks 0
-#cache_size 1
-#table_size 4096
-#gui_optimize 1
-#trust_server_cert  /etc/davfs2/certs/hidrive.pem
-#buf_size 1024
-#if_match_bug 0
-#max_upload_attempts 5
-#dir_refresh 600
-#file_refresh 5
-#debug config
-#debug kernel
-#debug cache
-#debug http
-#debug xml
-#debug httpauth
-#debug locks
-#debug ssl
-#debug httpbody
-#debug secrets
-#debug most
-
-# https://neu.lu/2017/03/webdav-mount-im-dateisystem/
-#echo|openssl s_client -connect webdav.hidrive.strato.com:443 |openssl x509 -out /etc/davfs2/certs/hidrive.pem
-
-# Erläuterungen: warum ich rein "read-only" mache: 
-#- einfach auf strato eine datei hinzufügen und dann wieder löschen. schon ist wait for sync...
-#[06/04/19 14:45:32] sync-mgr.c(559): Repo 'Bibliothek-A' sync state transition from 'synchronized' to 'uploading'.
-#[06/04/19 14:45:32] http-tx-mgr.c(1181): Transfer repo '9d950701': ('normal', 'init') --> ('normal', 'check')
-#[06/04/19 14:45:32] http-tx-mgr.c(2438): Bad response code for GET https://seafile-demo.de/seafhttp/repo/9d950701-5c67-4e7a-8d54-94fc7c802542/permission-check/?op=upload&client_id=9ca3b20e583b0869ff2ed854d4dbeac81f90b1c1&client_name=unknown: 403.
-#[06/04/19 14:45:32] http-tx-mgr.c(3708): Upload permission denied for repo 9d950701 on server https://seafile-demo.de.
-#[06/04/19 14:45:32] http-tx-mgr.c(1181): Transfer repo '9d950701': ('normal', 'check') --> ('error', 'finished')
-#=> waiting for sync...
-#=> ich muss read-write zugriff geben...
-
-#- wenn ich read-write mache, dann muss man bei änderungen auf hidrive den seaf-cli stoppen und starten.
-# er erkennt keine änderungen auf hidrive...
-
-# sync-intervall pro repo ist notwendig => geht, aber muss ich manuell einfügen...
-
-#---- wenn ich strato unmounte, sind alle syncs weg...
-# wenn ich strato wieder hole und ein ... run mache, sind wieder alle da...
-# also muss ich die richtige anzeige machen bzw. prüfen, ob das ziel da ist...
-
-#---- wenn ich eine biblitoehk auf dem server entferne...
-# verschwindet nicht auf cli-client...
-# ich muss ein desync machen...
-
-
 ## alle Werte bitte ohne "/" am Ende ...
-server="https://192.168.5.241"
-user="seaf-cli@tomatenblau.de"
-pw="Ionas12345"
-syncto="/mnt/hidrive/nuc"
-logfile="/home/datamate/seafcli-status.html"
+server="https://URL-OR-IP-OF-SEAFILE"
+user="user@example.com"
+pw="password"
+syncto="/mnt/hidrive/"
+logfile="/tmp/seafcli-status.html"
 syncintervall=60
 
 ## --------------------------
