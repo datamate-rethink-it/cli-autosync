@@ -34,7 +34,6 @@ This call makes the following changes to the system:
 
 # Usage of this script
 
-
 Once the installation is complete, it is sufficient to release a library or folder to the Seafile user specified in the script. The releases must be done "read + write", otherwise the synchronization will not be established.
 
 Of course, the sync is also stopped again, if you remove the release sometime. The previously synchronized data remains on the external memory and will not be deleted.
@@ -49,7 +48,7 @@ If you have granted a release, you can either wait until the next execution of t
 # this indicates the current status of the synchronization
 ```
 
-# Appendix 1: Mount of Strato HiDrive via WebDAV
+## Appendix 1: Mount of Strato HiDrive via WebDAV
 This solution was tested with HiDrive from the German supplier Strato. This external storage can be mounted via WebDAV in the Seafile server.
 
 The following optimizations were made.
@@ -78,3 +77,18 @@ $ echo|openssl s_client -connect webdav.hidrive.strato.com:443 |openssl x509 -ou
 # get the uid with id -u username
 https://webdav.hidrive.strato.com/users/<HIDRIVE-USER>/ /mnt/hidrive davfs rw,gid=1000,uid=1000,_netdev 0 0
 ```
+
+## Appendix 2: Why are only "read+write" shares supported?
+
+Unfortunately a read-only share can make some problems. If there is a file change on the external storage the seafile-cli tries to sync these changes back to seafile. The seafile-cli askes for the permission to write it back and receives an error 403. After that the seafile-cli client is stuck in the status "waiting for sync". 
+```
+# this is how the log looks like...
+[06/04/19 14:45:32] sync-mgr.c(559): Repo 'Bibliothek-A' sync state transition from 'synchronized' to 'uploading'.
+[06/04/19 14:45:32] http-tx-mgr.c(1181): Transfer repo '9d950701': ('normal', 'init') --> ('normal', 'check')
+[06/04/19 14:45:32] http-tx-mgr.c(2438): Bad response code for GET https://seafile-demo.de/seafhttp/repo/9d950701-5c67-4e7a-8d54-94fc7c802542/permission-check/?op=upload&client_id=9ca3b20e583b0869ff2ed854d4dbeac81f90b1c1&client_name=unknown: 403.
+[06/04/19 14:45:32] http-tx-mgr.c(3708): Upload permission denied for repo 9d950701 on server https://seafile-demo.de.
+[06/04/19 14:45:32] http-tx-mgr.c(1181): Transfer repo '9d950701': ('normal', 'check') --> ('error', 'finished')
+```
+I am quite sure that this is not the desired behaviour. I already created a ticket at the seafile forum.
+<a href="https://forum.seafile.com/t/seaf-cli-does-sticks-at-waiting-for-sync/9066">https://forum.seafile.com/t/seaf-cli-does-sticks-at-waiting-for-sync/9066</a>
+
