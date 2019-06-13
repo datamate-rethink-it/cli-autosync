@@ -68,7 +68,7 @@ if [[ $1 == "init" ]]; then
   # init (muss nur einmal ausgeführt werden...)
   sudo add-apt-repository ppa:seafile/seafile-client -y
   sudo apt-get update
-  sudo apt-get install -y curl nano jq seafile-cli davfs2
+  sudo apt-get install -y curl nano jq seafile-cli davfs2 sqlite3
 
   seaf-cli init -d ~/.ccnet
   seaf-cli start
