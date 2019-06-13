@@ -1,4 +1,4 @@
-# cli-autosync
+# cli-autosync (or Seafile High Availability Lite)
 
 This shell script synchronizes Seafile files and folders to external storage. While the files are stored block-based in Seafile, the files are stored in the external memory in the file format. Changes to the files and folder structure can be made on both sides. This script uses the Seafile-CLI (command line interface of the seafile client).
 
