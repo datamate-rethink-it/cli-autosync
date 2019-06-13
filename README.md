@@ -22,6 +22,7 @@ As soon as the preparation is done, the installation is quite easy:
 
 - Download this script *cli-autosync.sh* from Github
 - make this script executable ```chmod +x cli-autosync.sh```
+- create a file *seafcli-ready* on the external storage
 - change the settings at the top of *cli-autosync.sh*
 - initialise with ```./cli-autosync.sh init```
 
