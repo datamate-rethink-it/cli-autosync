@@ -168,7 +168,10 @@ elif [[ $1 == "run" ]]; then
 
   # write output to file
   CUR_STATUS=`/usr/bin/seaf-cli status`
-  echo "<h3>Status vom `date +%d.%m.%Y` - `date +%T`</h3><pre>${CUR_STATUS}</pre>" > $logfile
+  echo "<!DOCTYPE html><html lang='de'><head><title>Seafcli-status</title><meta charset='utf-8'/></head><body>
+  <h3>Status vom `date +%d.%m.%Y` - `date +%T`</h3><pre>${CUR_STATUS}</pre>
+  </body></html>
+  " > $logfile
 
 
   if [[ ${restart} == 1 ]]; then
