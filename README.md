@@ -94,3 +94,8 @@ Unfortunately a read-only share can make some problems. If there is a file chang
 I am quite sure that this is not the desired behaviour. I already created a ticket at the seafile forum.
 <a href="https://forum.seafile.com/t/seaf-cli-does-sticks-at-waiting-for-sync/9066">https://forum.seafile.com/t/seaf-cli-does-sticks-at-waiting-for-sync/9066</a>
 
+## Appendix 3: Syncintervall und Cronjob schedule
+
+The cronjob is executed all 30 minutes and will update the status html page and will add or remove synchronisations. This cronjob time schedule can be changed to any other value.
+
+The parameter *syncintervall* is a seafile-cli parameter and is stored directly to the seaf-cli sqlite database. A syncintervall of 60 means that every 60 seconds the seaf-cli checks the external storage for file changes. This fixed setting of regular checks is necessary because otherwise the seafile-cli will not get to know any file changes on the external storage. This parameter can only be changed with sqlite3.
