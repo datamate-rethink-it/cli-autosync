@@ -4,7 +4,8 @@ This shell script synchronizes Seafile files and folders to external storage. Wh
 
 Once the script is set up, its use is easy. All you have to do is to share a folder or a library with a special Seafile user to include it in the synchronization.
 
-<img src="https://de.seafile.com/wp-content/uploads/2019/06/seafile-dateibasierte-speicherung.png" />
+<img src="https://de.seafile.com/wp-content/uploads/2019/06/Replikation_Seafile_CLI-_Client.png" />
+
 
 # Prerequisites
 
