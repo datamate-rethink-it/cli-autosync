@@ -138,7 +138,7 @@ elif [[ $1 == "run" ]]; then
   for id in $lib_ids; do
     if [ $id != "ID" ]; then
 
-      # only sync library if it is read-only
+      # only sync library if it is read-write only
       perm=`curl -s -H "Authorization: Token ${token}" -H 'Accept: application/json; indent=4' "${server}/api2/repos/${id}/" --insecure | jq -r '.permission'`
       name=`curl -s -H "Authorization: Token ${token}" -H 'Accept: application/json; indent=4' "${server}/api2/repos/${id}/" --insecure | jq -r '.name'`
 
