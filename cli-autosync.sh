@@ -348,16 +348,19 @@ Looking at REPO ${ID} with remote name '${NAME}'"
                     editsettings -k "latestlibgrab" -v "$(date)" -f "${ORIGINALS}/${NAME}.info"
 
                     python -u ${sfCLI} sync -l "${ID}" -d "${SEAFMOUNTPOINTS}/${NAME}" -s "${SERVER}" -u "${USER}" -p "${PW}" > /dev/null 2>&1
-                    if [[ $? == 0 ]]; then
-                        echo "Starting to download..."
-                        sqlite3 $SEAFDATADIR/repo.db "INSERT INTO RepoProperty (repo_id, key, value) VALUES ('"${ID}"', 'sync-interval', '"${SYNCINTERVAL}"');"
-                        RESTART=1
+                    
+                    logthis "Modifying Interval..."
+                    sqlite3 $SEAFDATADIR/repo.db "INSERT OR REPLACE INTO RepoProperty ('repo_id', 'key', 'value') 
+SELECT '"${ID}"', 'sync-interval', '"${SYNCINTERVAL}"'
+WHERE NOT EXISTS (SELECT * FROM RepoProperty WHERE repo_id = '"${ID}"' AND key = 'sync-interval');
+UPDATE RepoProperty SET value='"${SYNCINTERVAL}"' WHERE repo_id='"${ID}"' AND key='sync-interval';
+"
 
-                        # writing info to sidecar
-                        editsettings -k id -v ${ID} -f "${ORIGINALS}/${NAME}.info"
-  
-                    fi
+                    # writing info to sidecar
+                    editsettings -k id -v ${ID} -f "${ORIGINALS}/${NAME}.info"
+                    
                 else 
+            
                     if [[ -d "${SEAFMOUNTPOINTS}/${NAME}" ]];then
                         logthis "Info. ${SEAFMOUNTPOINTS}/${NAME} Exists!"
                     fi
@@ -381,15 +384,16 @@ Looking at REPO ${ID} with remote name '${NAME}'"
                     editsettings -k "latestlibgrab" -v "$(date)" -f "${ORIGINALS}/${NAME}.info"
             
                     python -u ${sfCLI} sync -l "${ID}" -d "${SEAFMOUNTPOINTS}/${NAME}" -s "${SERVER}" -u "${USER}" -p "${PW}" > /dev/null 2>&1
-                    if [[ $? == 0 ]]; then
-                        echo "Starting to download..."
-                        sqlite3 $SEAFDATADIR/repo.db "INSERT INTO RepoProperty (repo_id, key, value) VALUES ('"${ID}"', 'sync-interval', '"${SYNCINTERVAL}"');"
-                        RESTART=1
-
-                        # writing info to sidecar
-                        editsettings -k id -v ${ID} -f "${ORIGINALS}/${NAME}.info"
-
-                    fi
+                    logthis "Modifying Interval..."
+                    sqlite3 $SEAFDATADIR/repo.db "INSERT OR REPLACE INTO RepoProperty ('repo_id', 'key', 'value') 
+SELECT '"${ID}"', 'sync-interval', '"${SYNCINTERVAL}"'
+WHERE NOT EXISTS (SELECT * FROM RepoProperty WHERE repo_id = '"${ID}"' AND key = 'sync-interval');
+UPDATE RepoProperty SET value='"${SYNCINTERVAL}"' WHERE repo_id='"${ID}"' AND key='sync-interval';
+"
+                    
+                    # writing info to sidecar
+                    editsettings -k id -v ${ID} -f "${ORIGINALS}/${NAME}.info"
+                    
                 fi # -d dirs exist
 
             fi #perm
