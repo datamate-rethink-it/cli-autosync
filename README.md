@@ -1,3 +1,11 @@
+# Public archive (Apr 21, 2023)
+
+This script is no longer maintained. The script will probably work, but there are other, and probably better maintained, alternatives like:
+- https://rclone.org/seafile/
+- https://manual.seafile.com/maintain/seafile_fsck/#exporting-libraries-to-file-system
+
+---
+
 # cli-autosync (or Seafile High Availability Lite)
 
 This shell script synchronizes Seafile files and folders to external storage. While the files are stored block-based in Seafile, the files are stored in the external memory in the file format. Changes to the files and folder structure can be made on both sides. This script uses the Seafile-CLI (command line interface of the seafile client).
